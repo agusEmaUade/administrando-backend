@@ -1,4 +1,8 @@
 const UserSerice = require('../services/users');
+const MailService = require('../services/mail');
+const fs = require('fs');
+const path = require('path');
+const handlebars = require('handlebars');
 
 const getUsers = async (req, res) => {
     try {
@@ -94,10 +98,47 @@ const updateUserById = async (req, res) => {
     }
 };
 
+
+const recoverPassword = async (req, res) => {
+    const { email } = req.body;
+  
+    try {
+      // Buscar al usuario por email
+      const user = await UserSerice.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Actualizar la contraseña a "123"
+      const updatedFields = { password: "123" };
+      await UserSerice.updateUserByEmail(user.email, updatedFields);
+  
+      const templatePath = path.resolve(__dirname, '../templates/password-recovery.template.hbs');
+      const templateSource = fs.readFileSync(templatePath, "utf8");
+      const template = handlebars.compile(templateSource);
+  
+      const htmlContent = template({
+        recipientName: user.email,
+        newPassword: "123",
+      });
+  
+      await MailService.sendMail(
+        email,
+        "Tu password fue reseteada",
+        htmlContent
+      );
+  
+      res.status(200).json({ message: "Password reset successfully and email sent." });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
 module.exports = {
     getUsers,
     createUser,
     getUserById,
     getUserByEmailAndPassword,
-    updateUserById
+    updateUserById,
+    recoverPassword
 };
