@@ -59,26 +59,40 @@ const createUser = async (req, res) => {
 };
 
 const updateUserById = async (req, res) => {
-    const {
-        id
-    } = req.params;
-    try {
-        const user = await UserSerice.getUserById(Number(id));
-        if (!user) res.status(404).json({
-            message: 'Not Found!'
-        });
-        user.email = req.body.email;
-        user.password = req.body.password;
-        const updateUser = await UserSerice.updateUser(user);
+    const { id } = req.params;
 
-        res.status(200).json(updateUser);
+    try {
+        // Verificar si el usuario existe
+        const user = await UserSerice.getUserById(Number(id));
+        if (!user) {
+            return res.status(404).json({
+                message: 'Usuario no encontrado',
+            });
+        }
+
+        // Actualizar los campos especificados
+        const updatedFields = {
+            email: req.body.email,
+            password: req.body.password,
+        };
+
+        // Llamar al servicio para actualizar
+        const [rowsUpdated] = await UserSerice.updateUser(Number(id), updatedFields); // Devuelve un array con el número de filas afectadas
+
+        if (rowsUpdated === 0) {
+            return res.status(400).json({ message: 'No se pudo actualizar el usuario' });
+        }
+
+        return res.status(200).json({
+            message: 'Usuario actualizado exitosamente',
+        });
 
     } catch (err) {
-        res.status(500).json({
-            message: err.message
+        return res.status(500).json({
+            message: err.message,
         });
     }
-}
+};
 
 module.exports = {
     getUsers,
