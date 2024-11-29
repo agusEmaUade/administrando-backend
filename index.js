@@ -27,6 +27,7 @@ app.use('/api', require('./routes/login'));
 app.use('/api/user', require('./routes/users'));
 app.use('/api/project', require('./routes/project'));
 app.use('/api/ticket', require('./routes/ticket'));
+app.use('/api/posts', require('./routes/posts'));
 
 app.use('/api-docs', swagger.serve, swagger.setup(require('./swagger.json')));
 
