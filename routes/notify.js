@@ -1,12 +1,11 @@
 const { Router } = require('express');
-const PostController = require('../controllers/posts');
+const NotifyController = require('../controllers/notify');
 const multer = require('multer');
 
 const router = Router();
 
 router.post('/',
-    PostController.createPost);
-
+    NotifyController.sendEmail);
 
 
 module.exports = router;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -9,33 +9,30 @@
 
 <body>
     <div>
-        <h1>New Post Notification</h1>
-        <p>Hello,</p>
-        <p>A new post has been published on our platform. Here are the details:</p>
+        <h1>¡Te han invitado a Administrando!</h1>
+        <p>Hola {{recipientName}},</p>
+        <p>Has sido invitado a unirte a <strong>Administrando</strong>, la mejor aplicación para gestionar proyectos y gastos. Aquí tienes los detalles de tu invitación:</p>
         <table>
             <tr>
-                <td><strong>Title:</strong></td>
-                <td>{{title}}</td>
+                <td><strong>Invitado por:</strong></td>
+                <td>{{inviterName}}</td>
             </tr>
             <tr>
-                <td><strong>Author:</strong></td>
-                <td>{{authorName}}</td>
+                <td><strong>Proyecto:</strong></td>
+                <td>{{projectName}}</td>
             </tr>
             <tr>
-                <td><strong>Product:</strong></td>
-                <td>{{productName}}</td>
-            </tr>
-            <tr>
-                <td><strong>Content:</strong></td>
-                <td>{{content}}</td>
-            </tr>
-            <tr>
-                <td><strong>Image:</strong></td>
-                <td><a href="{{imageUrl}}">View Image</a></td>
+                <td><strong>Mensaje:</strong></td>
+                <td>{{message}}</td>
             </tr>
         </table>
-        <p>Best regards,</p>
-        <p><strong>Your Company Name</strong></p>
+        <p>Para aceptar la invitación y comenzar a colaborar, haz clic en el siguiente enlace:</p>
+        <p>
+            <a href="{{invitationLink}}" style="padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">Aceptar Invitación</a>
+        </p>
+        <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        <p>Saludos cordiales,</p>
+        <p><strong>El equipo de Administrando</strong></p>
     </div>
 </body>
 
