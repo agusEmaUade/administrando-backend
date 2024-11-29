@@ -25,6 +25,7 @@ app.on('error', (err) => {
 
 app.use('/api', require('./routes/login'));
 app.use('/api/user', require('./routes/users'));
+app.use('/api/project', require('./routes/project'));
 /* app.use('/api/products', require('./routes/products'));
 app.use('/api/posts', require('./routes/posts')); */
 
