@@ -1,11 +1,17 @@
-const { User } = require("../db/db");
+const { Usuario } = require("../db/db");
 
-const getUsers = async () => await User.findAll();
-const getUserById = async (id) => await User.findByPk(id);
-const createUser = async (user) => await User.create(user);
-
+const getUsers = async () => await Usuario.findAll();
+const getUserById = async (id) => await Usuario.findByPk(id);
+const createUser = async (user) => await Usuario.create(user);
+const getUserByEmailAndPassword = async (email, password) => 
+    await Usuario.findOne({
+        where: { email, password }
+    });
+const updateUser = async (user) => await Usuario.update(user);
 module.exports = {
     getUsers,
     getUserById,
     createUser,
+    getUserByEmailAndPassword,
+    updateUser
 };

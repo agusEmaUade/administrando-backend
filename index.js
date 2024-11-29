@@ -23,9 +23,10 @@ app.on('error', (err) => {
     console.log('Server error: ', err);
 });
 
-app.use('/api/users', require('./routes/users'));
-app.use('/api/products', require('./routes/products'));
-app.use('/api/posts', require('./routes/posts'));
+app.use('/api', require('./routes/login'));
+app.use('/api/user', require('./routes/users'));
+/* app.use('/api/products', require('./routes/products'));
+app.use('/api/posts', require('./routes/posts')); */
 
 app.use('/api-docs', swagger.serve, swagger.setup(require('./swagger.json')));
 
@@ -33,6 +34,7 @@ app.listen(process.env.PORT || 3000, () => {
     console.log(`Server started on port ${process.env.PORT || 3000}`);
 });
 
+//inicio bd
 sequelize.authenticate()
     .then(() => {
         console.log('Database connection established!');
