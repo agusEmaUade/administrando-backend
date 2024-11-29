@@ -1,6 +1,4 @@
-const {
-    Sequelize
-} = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const UserModel = require('./models/users');
 const ProductModel = require('./models/products');
 const PostModel = require('./models/posts');
@@ -12,33 +10,85 @@ const sequelize = new Sequelize(process.env.DEV_DB_NAME, process.env.DEV_DB_USER
     dialect: 'mysql',
 });
 
-const User = UserModel(sequelize, Sequelize);
-const Product = ProductModel(sequelize, Sequelize);
-const Post = PostModel(sequelize, Sequelize);
+// Usuarios
+const Usuario = sequelize.define('Usuario', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+});
 
-User.hasMany(Post, {
-    foreignKey: 'authorId',
-    sourceKey: 'id',
-    onDelete: 'CASCADE'
-});
-Post.belongsTo(User, {
-    foreignKey: 'authorId',
-    targetKey: 'id',
-    onDelete: 'CASCADE',
-    as: 'author'
+// Proyectos
+const Proyecto = sequelize.define('Proyecto', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    titulo: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    descripcion: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    montoTotal: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
 });
 
-Product.hasMany(Post, {
-    foreignKey: 'productId',
-    sourceKey: 'id',
-    onDelete: 'CASCADE'
+// Tickets
+const Ticket = sequelize.define('Ticket', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    monto: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+    },
+    fecha: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    archivoNombre: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    archivoData: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+    },
 });
-Post.belongsTo(Product, {
-    foreignKey: 'productId',
-    targetKey: 'id',
-    onDelete: 'CASCADE',
-    as: 'product'
-});
+
+// Relación Usuarios-Proyectos (Muchos a Muchos)
+const UsuarioProyecto = sequelize.define('UsuarioProyecto', {});
+
+// Relación Usuarios-Tickets (Muchos a Muchos)
+const UsuarioTicket = sequelize.define('UsuarioTicket', {});
+
+// Relaciones
+Usuario.belongsToMany(Proyecto, { through: UsuarioProyecto });
+Proyecto.belongsToMany(Usuario, { through: UsuarioProyecto });
+
+Proyecto.hasMany(Ticket, { foreignKey: 'proyectoId', onDelete: 'CASCADE' });
+Ticket.belongsTo(Proyecto, { foreignKey: 'proyectoId' });
+
+Usuario.belongsToMany(Ticket, { through: UsuarioTicket });
+Ticket.belongsToMany(Usuario, { through: UsuarioTicket });
 
 
 sequelize.sync()
@@ -51,7 +101,9 @@ sequelize.sync()
 
 module.exports = {
     sequelize,
-    User,
-    Product,
-    Post,
+    Usuario,
+    Proyecto,
+    Ticket,
+    UsuarioProyecto,
+    UsuarioTicket,
 };
