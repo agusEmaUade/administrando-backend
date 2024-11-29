@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const MailService = require('../services/mail');
+//const MailService = require('../services/mail');
 const PostService = require('../services/posts');
 const handlebars = require('handlebars');
 
@@ -40,11 +40,11 @@ const createPost = async (req, res) => {
             imageUrl: aggregatedPost.imageUrl
         });
 
-        await MailService.sendMail(
+     /*    await MailService.sendMail(
             aggregatedPost.author.email,
             `Your post ${aggregatedPost.title} has been created successfully!`,
             htmlContent)
-
+ */
         res.status(201).json(aggregatedPost);
     } catch (err) {
         res.status(500).json({
