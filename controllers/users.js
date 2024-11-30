@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -38,37 +39,62 @@ const getUserById = async (req, res) => {
 
 const getUserByEmailAndPassword = async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const user = await UserSerice.getUserByEmailAndPassword(
-      String(email),
-      String(password)
-    );
-    if (!user)
-      return res.status(404).json({
-        message: "Not Found!",
-      });
 
+  try {
+    const user = await UserSerice.getUserByEmail(String(email));
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    // Generar el token JWT
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
+    // Responder con el token
     res.status(200).json({ token });
   } catch (err) {
+    console.error("Error in login:", err.message);
     res.status(500).json({
-      message: err.message,
+      message: "Internal server error",
     });
   }
 };
 
 const createUser = async (req, res) => {
   try {
-    const user = await UserSerice.createUser(req.body);
-    res.status(200).json(user);
+    const { email, password } = req.body;
+
+    const existingUser = await UserSerice.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already exists",
+      });
+    }
+    // Encriptar la contraseña
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const user = await UserSerice.createUser({
+      email,
+      password: hashedPassword,
+    });
+    res.status(201).json(user);
   } catch (err) {
+    console.error("Error al crear usuario:", err.message);
     res.status(500).json({
-      message: err.message,
+      message: "Internal server error",
     });
   }
 };
