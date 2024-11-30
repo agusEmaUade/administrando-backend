@@ -150,7 +150,11 @@ const recoverPassword = async (req, res) => {
     }
 
     // Actualizar la contraseña a "123"
-    const updatedFields = { password: "123" };
+    // Encriptar la contraseña
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash("123", saltRounds);
+
+    const updatedFields = { password: hashedPassword };
     await UserSerice.updateUserByEmail(user.email, updatedFields);
 
     const templatePath = path.resolve(
