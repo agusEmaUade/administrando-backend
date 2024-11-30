@@ -2,11 +2,13 @@ const { Router } = require("express");
 const ProjectController = require("../controllers/project");
 const { body, check } = require("express-validator");
 const validateRequest = require("../middlewares/request_validator");
+const authenticateToken = require('../middlewares/authMiddleware');
 
 const router = Router();
 
 router.post(
   "/:userId",
+  authenticateToken,
   [
     check("titulo").not().isEmpty(),
     check("descripcion").not().isEmpty(),
@@ -17,6 +19,7 @@ router.post(
 
 router.post(
   "/:userId/assign",
+  authenticateToken,
   [
     check("projectId").not().isEmpty(),
     validateRequest,
@@ -25,9 +28,9 @@ router.post(
 );
 
 router.delete(
-  "/:id", ProjectController.deleteProject
+  "/:id",   authenticateToken, ProjectController.deleteProject
 );
 
-router.get("/:userId", ProjectController.getProjectsByUser);
+router.get("/:userId", authenticateToken, ProjectController.getProjectsByUser);
 
 module.exports = router;
