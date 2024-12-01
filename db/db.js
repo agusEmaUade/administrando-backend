@@ -57,6 +57,10 @@ const Ticket = sequelize.define('Ticket', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    concepto: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     fecha: {
         type: DataTypes.DATE,
         allowNull: false,

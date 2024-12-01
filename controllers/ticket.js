@@ -16,12 +16,12 @@ const getTicketsByProject = async (req, res) => {
 
 const createTicket = async (req, res) => {
   const { projectId } = req.params;
-  const { monto, fecha, archivoNombre, archivoData, userIds } = req.body;
+  const { monto, fecha, concepto, archivoNombre, archivoData, userIds } = req.body;
 
   try {
     const newTicket = await TicketService.createTicket(
       projectId,
-      { monto, fecha, archivoNombre, archivoData },
+      { monto, fecha, concepto, archivoNombre, archivoData },
       userIds
     );
     res.status(201).json(newTicket);

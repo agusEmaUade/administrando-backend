@@ -13,6 +13,7 @@ router.post(
   authenticateToken,
   [
     check("monto").not().isEmpty().withMessage("El monto es requerido."),
+    check("concepto").not().isEmpty().withMessage("El monto es requerido."),
     check("fecha").not().isEmpty().withMessage("La fecha es requerida."),
     check("userIds").isArray().withMessage("Los userIds deben ser un array."),
     validateRequest,

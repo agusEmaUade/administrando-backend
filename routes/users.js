@@ -14,6 +14,7 @@ router.post('/',
         validateRequest,
     ],
     UserController.createUser);
+router.post('/existe', authenticateToken, UserController.existeUser);
 router.get('/:id', authenticateToken, UserController.getUserById);
 router.patch('/:id/email', authenticateToken, UserController.updateUserEmailById);
 router.patch('/:id/password', authenticateToken, UserController.updateUserPasswordById);

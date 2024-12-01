@@ -238,6 +238,23 @@ const recoverPassword = async (req, res) => {
   }
 };
 
+const existeUser =  async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const existingUser = await UserSerice.getUserByEmail(email);
+
+    const message = existingUser ? "existe" : "no existe";
+
+    res.status(201).json(message);
+  } catch (err) {
+    console.error("Error al crear usuario:", err.message);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
   getUsers,
   createUser,
@@ -246,4 +263,5 @@ module.exports = {
   updateUserPasswordById,
   updateUserEmailById,
   recoverPassword,
+  existeUser
 };

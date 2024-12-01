@@ -4,7 +4,12 @@ const { Ticket, Proyecto, Usuario } = require("../db/db");
 const getTicketsByProject = async (proyectoId) => {
   return await Ticket.findAll({
     where: { proyectoId },
-    include: [Proyecto], // Incluye información del proyecto (opcional)
+    include: [
+      {
+        model: Proyecto,
+        include: [Usuario],
+      },
+    ],
   });
 };
 
