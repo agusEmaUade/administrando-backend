@@ -33,4 +33,6 @@ router.delete(
 
 router.get("/:userId", authenticateToken, ProjectController.getProjectsByUser);
 
+router.patch("/:id", authenticateToken, ProjectController.updateProject);
+
 module.exports = router;

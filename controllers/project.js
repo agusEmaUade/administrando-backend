@@ -63,9 +63,31 @@ const deleteProject = async (req, res) => {
     }
 };
 
+const updateProject = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+  
+    try {
+      const updatedProject = await ProjectService.updateProjectById(Number(id), updates);
+  
+      res.status(200).json({
+        message: "Proyecto actualizado con éxito",
+        project: updatedProject,
+      });
+    } catch (err) {
+      if (err.message === "Proyecto no encontrado") {
+        res.status(404).json({ message: err.message });
+      } else {
+        res.status(500).json({ message: "Error al actualizar el proyecto" });
+      }
+    }
+  };
+  
+
 module.exports = {
     getProjectsByUser,
     createProject,
     assignUserToProject,
-    deleteProject
+    deleteProject,
+    updateProject
 };

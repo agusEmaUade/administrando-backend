@@ -1,5 +1,6 @@
 const { Usuario, Proyecto, UsuarioProyecto } = require("../db/db");
 
+const getPojectById = async (id) => await Proyecto.findByPk(id);
 const createProject = async (titulo, descripcion, montoTotal, userId) => {
     const proyecto = await Proyecto.create({
       titulo,
@@ -11,8 +12,6 @@ const createProject = async (titulo, descripcion, montoTotal, userId) => {
     await proyecto.addUsuario(userId);
     return proyecto;
   };
-  
-
   const assignUserToProject = async (userId, projectId) => {
     const proyecto = await Proyecto.findByPk(projectId);
     const usuario = await Usuario.findByPk(userId);
@@ -25,8 +24,6 @@ const createProject = async (titulo, descripcion, montoTotal, userId) => {
     await proyecto.addUsuario(usuario);
     return proyecto;
   };
-  
-
   const getProjectsByUser = async (userId) => {
     const usuario = await Usuario.findByPk(userId, {
       include: Proyecto,  // Incluir los proyectos asociados al usuario
@@ -38,8 +35,6 @@ const createProject = async (titulo, descripcion, montoTotal, userId) => {
   
     return usuario.Proyectos;
   };
-  
-
   const deleteProject = async (projectId) => {
     const proyecto = await Proyecto.findByPk(projectId);
   
@@ -51,10 +46,23 @@ const createProject = async (titulo, descripcion, montoTotal, userId) => {
     await proyecto.destroy();
     return { message: "Proyecto eliminado exitosamente" };
   };
+  const updateProjectById = async (projectId, updates) => {
+    const proyecto = await Proyecto.findByPk(projectId);
+  
+    if (!proyecto) {
+      throw new Error("Proyecto no encontrado");
+    }
+  
+    await proyecto.update(updates);
+  
+    return proyecto;
+  };
 
 module.exports = {
     createProject,
     assignUserToProject,
     getProjectsByUser,
-    deleteProject
+    deleteProject,
+    getPojectById,
+    updateProjectById
 };
