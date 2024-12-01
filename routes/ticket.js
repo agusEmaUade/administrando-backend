@@ -3,8 +3,11 @@ const TicketController = require("../controllers/ticket");
 const { check } = require("express-validator");
 const validateRequest = require("../middlewares/request_validator");
 const authenticateToken = require('../middlewares/authMiddleware');
+const multer = require('multer');
 
 const router = Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.get("/:projectId",   authenticateToken, TicketController.getTicketsByProject);
 
@@ -33,5 +36,12 @@ router.patch(
 );
 
 router.delete("/:ticketId",   authenticateToken, TicketController.deleteTicket);
+
+router.patch(
+  "/:ticketId/file",
+  authenticateToken,
+  upload.single('file'),
+  TicketController.updateTicketFile
+);
 
 module.exports = router;
