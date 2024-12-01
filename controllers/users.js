@@ -165,7 +165,7 @@ const updateUserEmailById = async (req, res) => {
     }
 
     const existeMail = await UserSerice.getUserByEmail(req.body.email);
-    if (!existeMail) {
+    if (existeMail) {
       return res.status(404).json({
         message: "El mail ya se encuentra registrado",
       });
