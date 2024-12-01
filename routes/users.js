@@ -15,7 +15,8 @@ router.post('/',
     ],
     UserController.createUser);
 router.get('/:id', authenticateToken, UserController.getUserById);
-router.patch('/:id', authenticateToken, UserController.updateUserById);
+router.patch('/:id/email', authenticateToken, UserController.updateUserEmailById);
+router.patch('/:id/password', authenticateToken, UserController.updateUserPasswordById);
 
 module.exports = router;
 

@@ -99,7 +99,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUserById = async (req, res) => {
+const updateUserPasswordById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -111,10 +111,24 @@ const updateUserById = async (req, res) => {
       });
     }
 
+    const isPasswordValid = await bcrypt.compare(
+      req.body.oldPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    // Encriptar la contraseña
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, saltRounds);
+
     // Actualizar los campos especificados
     const updatedFields = {
-      email: req.body.email,
-      password: req.body.password,
+      email: user.email,
+      password: hashedPassword,
     };
 
     // Llamar al servicio para actualizar
@@ -122,6 +136,51 @@ const updateUserById = async (req, res) => {
       Number(id),
       updatedFields
     ); // Devuelve un array con el número de filas afectadas
+
+    if (rowsUpdated === 0) {
+      return res
+        .status(400)
+        .json({ message: "No se pudo actualizar el usuario" });
+    }
+
+    return res.status(200).json({
+      message: "Usuario actualizado exitosamente",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+const updateUserEmailById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await UserSerice.getUserById(Number(id));
+    if (!user) {
+      return res.status(404).json({
+        message: "Usuario no encontrado",
+      });
+    }
+
+    const existeMail = await UserSerice.getUserByEmail(req.body.email);
+    if (!existeMail) {
+      return res.status(404).json({
+        message: "El mail ya se encuentra registrado",
+      });
+    }
+
+    const updatedFields = {
+      email: req.body.email,
+      password: user.password,
+    };
+
+    // Llamar al servicio para actualizar
+    const [rowsUpdated] = await UserSerice.updateUser(
+      Number(id),
+      updatedFields
+    );
 
     if (rowsUpdated === 0) {
       return res
@@ -184,6 +243,7 @@ module.exports = {
   createUser,
   getUserById,
   getUserByEmailAndPassword,
-  updateUserById,
+  updateUserPasswordById,
+  updateUserEmailById,
   recoverPassword,
 };
