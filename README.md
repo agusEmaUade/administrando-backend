@@ -1,3 +1,43 @@
+# Aplicación Backend en Node.js con Express
+
+Esta es una aplicación backend desarrollada en **Node.js** utilizando el framework **Express**. Está diseñada para gestionar diversos aspectos de la administración de proyectos, incluyendo el registro de usuarios, gestión de tickets, y más.
+
+La aplicación integra servicios de envío de correos electrónicos mediante **Resend** y almacenamiento de archivos en la nube usando **Cloudinary**.
+
+---
+
+## Configuración del Entorno
+Este proyecto requiere un archivo .env configurado para el entorno de desarrollo. La estructura del archivo debe ser la siguiente:
+
+```bash
+PORT=8080
+NODE_ENV=develope
+
+# ---------------DB--------------------------
+DEV_DB_USERNAME=root
+DEV_DB_PASSWORD=xxx
+DEV_DB_NAME=administrando
+
+# ---------------IMAGE_HOSTING--------------------------
+CLOUD_NAME=xx
+CLOUDINARY_API_KEY=xx
+CLOUDINARY_SECRET=xx
+
+# ---------------MAILING--------------------------
+# Resend
+RESEND_API_KEY=xx
+
+# ---------------JWT--------------------------
+JWT_SECRET=QWS12
+JWT_EXPIRES_IN=1h
+
+```
+
+## Postman Collection
+
+La colección de Postman que cubre todos los endpoints de la API se puede encontrar en el siguiente [Enlace a Postman](https://documenter.getpostman.com/view/39583512/2sAYBYfVSy) .
+
+
 # Base de Datos
 
 Este proyecto utiliza un esquema relacional con las siguientes tablas: **Usuarios**, **Proyectos**, **Tickets**, **UsuarioProyecto** y **UsuarioTicket**.
