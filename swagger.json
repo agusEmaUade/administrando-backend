@@ -1,63 +1,130 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-	  "title": "Clase_Backend_II",
+	  "title": "Administrando API",
+	  "description": "API para la gestión de usuarios, proyectos y tickets",
 	  "version": "1.0.0"
 	},
+	"servers": [
+	  {
+		"url": "http://localhost:8080/api",
+		"description": "Servidor local"
+	  }
+	],
 	"paths": {
-	  "/api/users/": {
+	  "/user": {
 		"post": {
-		  "summary": "Create a new user",
+		  "summary": "Crear usuario",
 		  "requestBody": {
+			"required": true,
 			"content": {
 			  "application/json": {
-				"example": {
-				  "username": "ffares",
-				  "email": "franciscofares23@gmail.com"
-				}
-			  }
-			}
-		  },
-		  "responses": {}
-		}
-	  },
-	  "/api/products/1": {
-		"get": {
-		  "summary": "Get product by ID",
-		  "responses": {}
-		}
-	  },
-	  "/api/posts/": {
-		"post": {
-		  "summary": "Create a new post",
-		  "requestBody": {
-			"content": {
-			  "multipart/form-data": {
 				"schema": {
 				  "type": "object",
 				  "properties": {
-					"file": {
-					  "type": "string",
-					  "format": "binary"
-					},
-					"authorId": {
-					  "type": "string"
-					},
-					"productId": {
-					  "type": "string"
-					},
-					"title": {
-					  "type": "string"
-					},
-					"content": {
-					  "type": "string"
-					}
-				  }
+					"email": { "type": "string" },
+					"password": { "type": "string" }
+				  },
+				  "required": ["email", "password"]
 				}
 			  }
 			}
 		  },
-		  "responses": {}
+		  "responses": {
+			"201": { "description": "Usuario creado" },
+			"400": { "description": "Datos inválidos" }
+		  }
+		}
+	  },
+	  "/user/existe": {
+		"post": {
+		  "summary": "Verificar si un usuario existe",
+		  "security": [{ "bearerAuth": [] }],
+		  "requestBody": {
+			"required": true,
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"email": { "type": "string" }
+				  },
+				  "required": ["email"]
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": { "description": "Usuario encontrado" },
+			"404": { "description": "Usuario no encontrado" }
+		  }
+		}
+	  },
+	  "/login": {
+		"post": {
+		  "summary": "Iniciar sesión",
+		  "requestBody": {
+			"required": true,
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"email": { "type": "string" },
+					"password": { "type": "string" }
+				  },
+				  "required": ["email", "password"]
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"200": { "description": "Inicio de sesión exitoso" },
+			"401": { "description": "Credenciales inválidas" }
+		  }
+		}
+	  },
+	  "/validate-token": {
+		"get": {
+		  "summary": "Validar token",
+		  "security": [{ "bearerAuth": [] }],
+		  "responses": {
+			"200": { "description": "Token válido" },
+			"401": { "description": "Token inválido o expirado" }
+		  }
+		}
+	  },
+	  "/register": {
+		"post": {
+		  "summary": "Registrar usuario",
+		  "requestBody": {
+			"required": true,
+			"content": {
+			  "application/json": {
+				"schema": {
+				  "type": "object",
+				  "properties": {
+					"email": { "type": "string" },
+					"password": { "type": "string" }
+				  },
+				  "required": ["email", "password"]
+				}
+			  }
+			}
+		  },
+		  "responses": {
+			"201": { "description": "Usuario registrado" },
+			"400": { "description": "Datos inválidos" }
+		  }
+		}
+	  }
+	},
+	"components": {
+	  "securitySchemes": {
+		"bearerAuth": {
+		  "type": "http",
+		  "scheme": "bearer",
+		  "bearerFormat": "JWT"
 		}
 	  }
 	}
